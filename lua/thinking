@@ -1,0 +1,6 @@
+this project should have moudles below:
+1. Commands: people can use it to run custom or buildin commands
+2. History: this project should save commands that had been runned
+3. Mark: users can mark commands that run repeatedly to user's buildin commands depend on project type
+4. Debug: depend on nvim-dap and nvim-dapui to make project can debug
+
