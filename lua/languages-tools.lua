@@ -12,13 +12,21 @@ local action_state = require("telescope.actions.state")
 
 local buidin_cmd = {
 	rust = {
-		"Custom",
 		"cargo install --path .",
 		"cargo run",
 		"cargo build"
 	},
 	go = {
-		"Custom"
+	}
+}
+
+-- project rules presentation
+-- use another file to present it 
+local project_rules = {
+	rust = {
+		rule1 = {
+			"Cargo.toml", "main.rs"
+		}
 	}
 }
 
@@ -68,9 +76,16 @@ end
 function M.choice_command(language, choice)
 	local languagehandler = M.cmd[language]
 	log.record(languagehandler[choice])
+
+	M.run_command(languagehandler[choice])
 end
 
+-- return command status after running
 function M.run_command(command)
+	log.record("current command: " .. command)
+	-- vim.api.nvim_command("botright split")
+	-- vim.api.nvim_command("execute \"terminal \"" .. command)
+	-- vim.api.nvim_command("normal! G")
 end
 
 function M.UiRender(language)
@@ -85,17 +100,25 @@ function M.UiRender(language)
 	-- this section copy from rust-tools.nvim
 	local function attach_mappings(bufnr, map)
 			local function on_select()
-					local choice = action_state.get_selected_entry().index
+					local entry = action_state.get_selected_entry()
+					if entry == nil then
+						local current_line = action_state.get_current_line()
+						log.record("current line: ".. current_line)
+						M.run_command(current_line)
 
-					log.record("my choice is " .. choice)
-
-					if choice == 1 then
-						-- there run our custom command and throw into history
+						actions.close(bufnr)
 					else
-						M.choice_command(language, choice)
-					end
+						local choice = entry.index
 
-					actions.close(bufnr)
+						log.record("my choice is " .. choice)
+
+						M.choice_command(language, choice)
+						-- if choice == 1 then
+							-- -- there run our custom command and throw into history
+						-- else
+						-- end
+						actions.close(bufnr)
+					end
 			end
 
 			local function show_history()
@@ -126,9 +149,16 @@ function M.UiRender(language)
 end
 
 function M.ShowCommands(language)
-	-- M.setup()
-	M.UiRender(language)
-	M.languages_tools.ui()
+	local ok, gitdir = lib.CheckGitDirectory()
+
+	if ok then
+		M.gitdir = gitdir
+		-- M.setup()
+		M.UiRender(language)
+		M.languages_tools.ui()
+	else
+		vim.api.nvim_command("echo you should use git init your project!")
+	end
 end
 
 return M
