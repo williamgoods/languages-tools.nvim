@@ -19,16 +19,16 @@
 -- print("return_result " .. return_result)
 
 -- local function tprint (tbl, indent)
-  -- if not indent then indent = 0 end
-  -- for k, v in pairs(tbl) do
-    -- local formatting = string.rep("  ", indent) .. k .. ": "
-    -- if type(v) == "table" then
-      -- print(formatting)
-      -- tprint(v, indent+1)
-    -- else
-      -- print(formatting .. v)
-    -- end
-  -- end
+	-- if not indent then indent = 0 end
+	-- for k, v in pairs(tbl) do
+		-- local formatting = string.rep("  ", indent) .. k .. ": "
+		-- if type(v) == "table" then
+			-- print(formatting)
+			-- tprint(v, indent+1)
+		-- else
+			-- print(formatting .. v)
+		-- end
+	-- end
 -- end
 --
 -- local buildin_rules = {
@@ -50,6 +50,9 @@
 -- local rules = vim.tbl_deep_extend("keep", {}, buildin_rules, user_rules or {})
 --
 -- tprint(rules, 1)
+vim.api.nvim_command([[
+	let &runtimepath = &runtimepath .. ",/home/williamgoods/Github/languages-tools.nvim"
+]])
 
-local init_languages = require("lua/init")
+local init_languages = require("lua/init_languages")
 init_languages.RunProject()

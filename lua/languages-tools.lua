@@ -83,9 +83,16 @@ end
 -- return command status after running
 function M.run_command(command)
 	log.record("current command: " .. command)
-	-- vim.api.nvim_command("botright split")
-	-- vim.api.nvim_command("execute \"terminal \"" .. command)
-	-- vim.api.nvim_command("normal! G")
+	local current_path = vim.fn.getcwd()
+
+	vim.api.nvim_command("cd " .. M.gitdir)
+
+	vim.api.nvim_command("botright split")
+	vim.api.nvim_command("execute \"terminal " .. command .. "\"")
+	vim.api.nvim_command("normal! G")
+	log.record("run_command path: " .. vim.fn.getcwd())
+
+	vim.api.nvim_command("cd " .. current_path)
 end
 
 function M.UiRender(language)
@@ -113,10 +120,7 @@ function M.UiRender(language)
 						log.record("my choice is " .. choice)
 
 						M.choice_command(language, choice)
-						-- if choice == 1 then
-							-- -- there run our custom command and throw into history
-						-- else
-						-- end
+
 						actions.close(bufnr)
 					end
 			end
@@ -148,17 +152,11 @@ function M.UiRender(language)
 	end
 end
 
-function M.ShowCommands(language)
-	local ok, gitdir = lib.CheckGitDirectory()
-
-	if ok then
+function M.ShowCommands(language, gitdir)
 		M.gitdir = gitdir
 		-- M.setup()
 		M.UiRender(language)
 		M.languages_tools.ui()
-	else
-		vim.api.nvim_command("echo you should use git init your project!")
-	end
 end
 
 return M
