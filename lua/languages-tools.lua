@@ -2,14 +2,6 @@ local vim = vim
 
 local log = require("languages-tools/log")
 local lib = require("languages-tools/lib")
-
-
-local pickers = require "telescope.pickers"
-local finders = require "telescope.finders"
-local conf = require("telescope.config").values
-local actions = require("telescope.actions")
-local action_state = require("telescope.actions.state")
-
 local buidin_cmd = {
 	rust = {
 		"cargo install --path .",
@@ -17,16 +9,6 @@ local buidin_cmd = {
 		"cargo build"
 	},
 	go = {
-	}
-}
-
--- project rules presentation
--- use another file to present it 
-local project_rules = {
-	rust = {
-		rule1 = {
-			"Cargo.toml", "main.rs"
-		}
 	}
 }
 
@@ -90,12 +72,18 @@ function M.run_command(command)
 	vim.api.nvim_command("botright split")
 	vim.api.nvim_command("execute \"terminal " .. command .. "\"")
 	vim.api.nvim_command("normal! G")
-	log.record("run_command path: " .. vim.fn.getcwd())
+	-- log.record("run_command path: " .. vim.fn.getcwd())
 
 	vim.api.nvim_command("cd " .. current_path)
 end
 
 function M.UiRender(language)
+	local pickers = require "telescope.pickers"
+	local finders = require "telescope.finders"
+	local conf = require("telescope.config").values
+	local actions = require("telescope.actions")
+	local action_state = require("telescope.actions.state")
+
 	M.languages_tools = {}
 	local current_language = M.cmd[language]
 	if current_language == nil then

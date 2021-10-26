@@ -54,5 +54,5 @@ vim.api.nvim_command([[
 	let &runtimepath = &runtimepath .. ",/home/williamgoods/Github/languages-tools.nvim"
 ]])
 
-local init_languages = require("lua/init_languages")
+local init_languages = require("lua/init")
 init_languages.RunProject()
