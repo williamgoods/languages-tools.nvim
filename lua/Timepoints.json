@@ -1,0 +1,14 @@
+{
+	"version": "0.1",
+	"tasks": {
+		"name": "process",
+		"command": "process",
+		"belongrules": "before",
+		"class": "before",
+		"default": "before",
+		"options": {
+			"cwd": "after",
+			"shell": "after"
+		}
+	}
+}

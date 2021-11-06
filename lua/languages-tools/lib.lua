@@ -1,10 +1,20 @@
 local lib = {}
-
+local json = require("lua.json")
 
 function lib.FileOpration(filename, operation, filefunc)
 	local file = io.open(filename, operation)
 	filefunc(file)
 	file:close()
+end
+
+function lib.DecodeJsonFile(filename)
+	local return_content = ""
+
+	lib.FileOpration(filename, "r", function (filehandler)
+		return_content = json.decode(filehandler:read("*all"))
+	end)
+
+	return return_content
 end
 
 function lib.CheckGitDirectory()

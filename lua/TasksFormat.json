@@ -1,0 +1,46 @@
+{
+	"version": {
+		"type": "string"
+	}, 
+	"tasks": {
+		"type":		"list",
+		"elemformat":{
+			"name":  {
+				"type": "string"
+			},
+			"command":{
+				"type": "list",
+				"elemformat": "string" 
+			},
+			"belongrules": {
+				"type": "list",
+				"elemformat": "string" 
+			},
+			"class": {
+				"type": "string"
+			},
+			"default": {
+				"type": "bool"
+			},
+			"options": {
+				"type": "limitedlist", 
+				"elemformat": {
+					"1": {
+						"type": "limitedmap",
+						"elemformat": {
+							"key": "cwd",
+							"value": "string"
+						}
+					},
+					"2": {
+						"type": "limitedmap",
+						"elemformat": {
+							"key": "shell",
+							"value": "string"
+						}
+					}
+				}
+			}
+		}
+	}
+}

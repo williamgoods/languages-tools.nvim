@@ -1,0 +1,16 @@
+{
+	"version" : "0.1", 
+	"tasks": [
+			{
+				"name": "RunOurProject",
+				"command":	["cargo run"],
+				"belongrules": ["rule1"],
+				"class": "build",
+				"default": "true",
+				"options": {
+					"cwd": "cwd",
+					"shell": "shell"
+				}
+			}
+		]
+}

@@ -2,7 +2,7 @@ local vim = vim
 
 local M = {}
 
-local log = require("languages-tools/log")
+-- local log = require("languages-tools/log")
 local lib = require("languages-tools/lib")
 local languages_tools = require("languages-tools")
 
@@ -17,8 +17,6 @@ local project_rules = {
 		}
 	}
 }
-
-gitdir = "/home/williamgoods/Github/RustProject/rust_test"
 
 local match_language = ""
 
