@@ -14,7 +14,16 @@
 			},
 			"belongrules": {
 				"type": "list",
-				"elemformat": "string" 
+				"elemformat": {
+					"type": "map",
+					"elemformat": {
+						"key": "string",
+						"value": {
+							"type": "list",
+							"elemformat": "string"
+						}
+					}
+				} 
 			},
 			"class": {
 				"type": "string"

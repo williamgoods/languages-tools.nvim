@@ -15,11 +15,12 @@ function M.setup(user_timpoint_path)
 	M.timepoints = {}
 	-- put this into user, can make user add a prefix to all about timepoint function
 	local prefix = "tasks"
+	M.timepoints.tasks = {}
 	M.ParseRawTimepoints(prefix, raw_timepoints.tasks)
 
 	M.timepoints.version = raw_timepoints.version
 
-	tprint(M.timepoints)
+	-- tprint(M.timepoints)
 
 	return M.timepoints
 end
@@ -27,11 +28,11 @@ end
 function M.ParseRawTimepoints(prefix, raw_timepoints)
 	for key, value in pairs(raw_timepoints) do
 		if type(value) == "string" then
-			if not M.timepoints[value] then
-				M.timepoints[value] = {}
+			if not M.timepoints.tasks[value] then
+				M.timepoints.tasks[value] = {}
 			end
 
-			table.insert(M.timepoints[value], #M.timepoints[value] + 1, prefix .. "_" .. key)
+			table.insert(M.timepoints.tasks[value], #M.timepoints.tasks[value] + 1, prefix .. "_" .. key)
 		else
 			M.ParseRawTimepoints(prefix .. "_" .. key, value)
 		end

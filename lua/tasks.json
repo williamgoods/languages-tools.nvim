@@ -4,7 +4,7 @@
 			{
 				"name": "RunOurProject",
 				"command":	["cargo run"],
-				"belongrules": ["rule1"],
+				"belongrules": {"c": ["rule1"], "rust": ["rule1"]},
 				"class": "build",
 				"default": "true",
 				"options": {

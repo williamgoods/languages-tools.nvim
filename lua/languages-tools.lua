@@ -4,11 +4,17 @@ local log = require("languages-tools/log")
 local lib = require("languages-tools/lib")
 local buidin_cmd = {
 	rust = {
-		"cargo install --path .",
-		"cargo run",
-		"cargo build"
+		{"cargo install","cargo install --path ."},
+		{"cargo run"},
+		{"cargo build"}
 	},
 	go = {
+		{"gorun", "go run main.go"},
+		{"gobuild", "go build"},
+		{"GoBuildAndRun", "go build -o main && ./main"}
+	},
+	cpp = {
+		{"CplusplusMainRun", "g++ main.cpp -o main && ./main"}
 	}
 }
 
