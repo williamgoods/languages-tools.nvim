@@ -38,7 +38,6 @@ if ok then
 	local user_rules = vim.g.languages_tools_project_rules
 
 	local rules = vim.tbl_deep_extend("force", {}, project_rules, user_rules or {})
-	tprint(rules)
 
 	for language, language_rules in pairs(rules) do
 		for rulename, filerules in pairs(language_rules) do
@@ -87,18 +86,18 @@ if ok then
 		tasks_path[#tasks_path + 1] = gitdir .. "/.language/tasks.json"
 	end
 
-	print("I want to know task_path:")
-	tprint(tasks_path)
+	-- print("I want to know task_path:")
+	-- tprint(tasks_path)
 end
 
-print("gitdir: " .. gitdir)
-print("match rules: ")
-tprint(match_rules)
+-- print("gitdir: " .. gitdir)
+-- print("match rules: ")
+-- tprint(match_rules)
 
 function M.RunProject()
-	print("run our project")
-	tprint(match_rules)
-	print("match_rules: " .. vim.tbl_count(match_rules))
+	-- print("run our project")
+	-- tprint(match_rules)
+	-- print("match_rules: " .. vim.tbl_count(match_rules))
 
 	if not ok then
 		print("your project should be a git repository")

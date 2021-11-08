@@ -76,6 +76,7 @@ function M.run_command(command)
 	vim.api.nvim_command("botright split")
 	vim.api.nvim_command("execute \"terminal " .. command .. "\"")
 	vim.api.nvim_command("normal! G")
+	vim.api.nvim_command("startinsert")
 	-- log.record("run_command path: " .. vim.fn.getcwd())
 
 	vim.api.nvim_command("cd " .. current_path)

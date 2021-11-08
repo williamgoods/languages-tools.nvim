@@ -1,5 +1,5 @@
 local lib = require("languages-tools.lib")
-local check = require("Check").setup()
+local check = require("Check")
 
 local M = {}
 
@@ -115,7 +115,5 @@ function M.PutIntoTaskPool(taskname, taskexecution)
 
 	print("taskname: " .. taskname .. ", taskexecution: " .. taskexecution)
 end
-
--- M.setup("/home/williamgoods", "/home/williamgoods")
 
 return M

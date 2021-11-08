@@ -9,8 +9,9 @@ function M.setup()
 		[ "map" ] = M.ParseMap,
 		[ "limitedmap" ]  = M.ParseLimitedMap,
 		[ "directory" ] = M.ParseDirectory,
+		[ "limiteddirectory" ] = M.ParseLimitedDirectory,
 		[ "list" ] = M.ParseList,
-		[ "limitedlist" ] = M.ParseLimitedList,
+		-- [ "limitedlist" ] = M.ParseLimitedList,
 	}
 
 	return M
@@ -35,6 +36,7 @@ function M.ParseString(_, object)
 end
 
 function M.ParseBool(_, object)
+	print("parse current bool: " .. tostring(object))
 	if object == "true" or object == "false" then
 		return true
 	else
@@ -91,11 +93,6 @@ function M.ParseLimitedMap(ObjectsFormat, Objects)
 	local key = Objects['key']
 	local value = Objects['value']
 
-	-- tprint(Objects)
-	-- tprint(format)
-	print("keydefalut: " .. keydefalut)
-
-	print("----- ParseLimitedMap key: " .. key .. ", value: " .. value)
 	if key ~= keydefalut then
 		print("ParseLimitedMap false")
 		return false
@@ -121,7 +118,7 @@ function M.ParseExtendFirst(format, Objects)
 	local filtermap = M.FilterMapOnExtend(format)
 
 	if not filtermap then
-		return true, filtermap
+		return true, false
 	end
 
 	if type(format) == "string" then
@@ -152,7 +149,7 @@ function M.ParseExtendElemFormat(objectformat, name, object)
 
 	-- tprint(objectformat)
 	if objectformat['type'] == 'map' or objectformat['type'] == 'limitedmap' then
-		print("---- to Parse***Map function args: ".."{ key = " .. name .. ", value = " .. tostring(object) .. "}")
+		print("to Parse***Map function args: ".."{ key = " .. name .. ", value = " .. tostring(object) .. "}")
 		ok = M.Check(objectformat, {key = name, value = object})
 	else
 		ok = M.Check(objectformat, object)
@@ -171,20 +168,21 @@ function M.ParseDirectory(ObjectsFormat, Objects)
 	end
 
 	tprint(Objects)
-		for _, object in pairs(Objects) do
-			local ok = M.Check(format, object)
+	for _, object in pairs(Objects) do
+		local ok = M.Check(format, object)
 
-			if not ok then
-				print("ParseDirectory false")
-				return false
-			end
+		if not ok then
+			print("parsedirectory false")
+			return false
+		end
 	end
 
 	return true
 end
 
-function M.ParseLimitedList(ObjectsFormat, Objects)
-	print("enter ParseLimitedList")
+function M.ParseLimitedDirectory(ObjectsFormat, Objects)
+	print("enter ParseLimitedDirectory")
+
 	local format = ObjectsFormat["elemformat"]
 
 	local directreturn, extendparsefirst = M.ParseExtendFirst(format, Objects)
@@ -192,27 +190,70 @@ function M.ParseLimitedList(ObjectsFormat, Objects)
 		return extendparsefirst
 	end
 
-	local index = 1
-
-	for name, obj in pairs(Objects) do
-		print("\n")
-		print("name: " .. name .. ", object: " .. obj)
-		print("\n")
-
-		local objformat = format[tostring(index)]
-
-		local ok = M.ParseExtendElemFormat(objformat, name, obj)
-
-		index = index + 1
+	for objformatname, objformat in pairs(format) do
+		local ok = M.Check(objformat, Objects[objformatname])
 
 		if not ok then
-				print("ParseLimitedList false")
+			print("parsedirectory false")
 			return false
 		end
 	end
 
+	-- for objname, obj in pairs(Objects) do
+		-- local ok = M.Check(ObjectsFormat[objname], obj)
+--
+		-- if not ok then
+			-- print("parsedirectory false")
+			-- return false
+		-- end
+	-- end
+
 	return true
 end
+
+-- function M.ParseLimitedList(ObjectsFormat, Objects)
+	-- print("enter ParseLimitedList")
+	-- local format = ObjectsFormat["elemformat"]
+--
+	-- local directreturn, extendparsefirst = M.ParseExtendFirst(format, Objects)
+	-- if directreturn then
+		-- return extendparsefirst
+	-- end
+--
+	-- -- for index = 1, vim.tbl_count(format) do
+		-- -- local objformat = format[tostring(index)]
+-- --
+		-- -- local limitedkey = objformat['elemformat']['key']
+-- --
+		-- -- local ok = M.ParseExtendElemFormat(objformat, limitedkey, Objects[limitedkey])
+-- --
+		-- -- if not ok then
+				-- -- print("ParseLimitedList false")
+			-- -- return false
+		-- -- end
+	-- -- end
+--
+	-- local index = 1
+--
+	-- for name, obj in pairs(Objects) do
+		-- print("\n")
+		-- print("name: " .. name .. ", object: " .. obj)
+		-- print("\n")
+--
+		-- local objformat = format[tostring(index)]
+--
+		-- local ok = M.ParseExtendElemFormat(objformat, name, obj)
+--
+		-- index = index + 1
+--
+		-- if not ok then
+				-- print("ParseLimitedList false")
+			-- return false
+		-- end
+	-- end
+--
+	-- return true
+-- end
 
 function M.ParseList(ObjectsFormat, Objects)
 	print("enter ParseList")
@@ -240,6 +281,5 @@ function M.ParseList(ObjectsFormat, Objects)
 end
 
 M.setup()
-
 
 return M
