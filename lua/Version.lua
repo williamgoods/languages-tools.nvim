@@ -1,6 +1,6 @@
-local timepoints = require("lua.Timepoints")
-local tasks = require("lua.Tasks")
-local timepointoperation = require("lua.TimepointOperation")
+local timepoints = require("Timepoints")
+local tasks = require("Tasks")
+local timepointoperation = require("TimepointOperation")
 
 -- code is simply, but people is complex, so everyone should balance code process and people communication
 

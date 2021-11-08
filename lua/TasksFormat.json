@@ -5,7 +5,7 @@
 	"tasks": {
 		"type":		"list",
 		"elemformat":{
-			"name":  {
+			"name": {
 				"type": "string"
 			},
 			"command":{
@@ -13,11 +13,11 @@
 				"elemformat": "string" 
 			},
 			"belongrules": {
-				"type": "list",
+				"type": "directory",
 				"elemformat": {
 					"type": "map",
 					"elemformat": {
-						"key": "string",
+						"key": "string", 
 						"value": {
 							"type": "list",
 							"elemformat": "string"

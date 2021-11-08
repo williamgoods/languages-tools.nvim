@@ -1,4 +1,4 @@
-local lib = require("lua.languages-tools.lib")
+local lib = require("languages-tools.lib")
 
 local M = {}
 
@@ -39,6 +39,6 @@ function M.ParseRawTimepoints(prefix, raw_timepoints)
 	end
 end
 
-M.setup("/home/williamgoods")
+-- M.setup("/home/williamgoods")
 
 return M

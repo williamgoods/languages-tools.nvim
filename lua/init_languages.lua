@@ -1,11 +1,10 @@
 local vim = vim
-local version = require("lua.Version")
+local version = require("Version")
+-- local log = require("languages-tools/log")
+local lib = require("languages-tools.lib")
+local languages_tools = require("languages-tools")
 
 local M = {}
-
--- local log = require("languages-tools/log")
-local lib = require("languages-tools/lib")
-local languages_tools = require("languages-tools")
 
 local ok, gitdir = lib.CheckGitDirectory()
 
@@ -33,6 +32,7 @@ local project_rules = {
 }
 
 local match_rules = {}
+local tasks_path = {}
 
 if ok then
 	local user_rules = vim.g.languages_tools_project_rules
@@ -56,69 +56,67 @@ if ok then
 			if language_ok then
 				if not match_rules[language] then
 					match_rules[language] = {}
+					match_rules[language][#match_rules[language]+1] = rulename
 				else
 					match_rules[language][#match_rules[language]+1] = rulename
 				end
 			end
 		end
 	end
+
+	-- local user_tasks_path = vim.g.languages_tools_tasks_path
+	-- local system_tasks_path = vim.g.languages_tools_system_task_path
+	-- local project_tasks_path = gitdir .. "/.language/tasks.json"
+
+	local scan_tasks_driectory = function (tasks_directory)
+		if tasks_directory then
+			for language, _ in pairs(match_rules) do
+				local tasks_json_path = tasks_directory .. "/" .. language .. "/tasks.json"
+				print("add tasks_json_path: " .. tasks_json_path)
+
+				if lib.exists(tasks_json_path) then
+					tasks_path[#tasks_path+1] = tasks_json_path
+				end
+			end
+		end
+	end
+
+	scan_tasks_driectory(vim.g.languages_tools_tasks_path)
+	scan_tasks_driectory(vim.g.languages_tools_system_task_path)
+	if lib.exists(gitdir .. "/.language/tasks.json") then
+		tasks_path[#tasks_path + 1] = gitdir .. "/.language/tasks.json"
+	end
+
+	print("I want to know task_path:")
+	tprint(tasks_path)
 end
 
 print("gitdir: " .. gitdir)
+print("match rules: ")
+tprint(match_rules)
 
--- local user_tasks_path = vim.g.languages_tools_tasks_path
--- local system_tasks_path = vim.g.languages_tools_system_task_path
--- local project_tasks_path = gitdir .. "/.language/tasks.json"
+function M.RunProject()
+	print("run our project")
+	tprint(match_rules)
+	print("match_rules: " .. vim.tbl_count(match_rules))
 
-local tasks_path = {}
-
-local scan_tasks_driectory = function (tasks_directory)
-	if tasks_directory then
-		for language, _ in pairs(match_rules) do
-			local tasks_json_path = tasks_directory .. "/" .. language .. "/tasks.json"
-
-			if lib.exists(tasks_json_path) then
-				tasks_path[#tasks_path+1] = tasks_json_path
-			end
+	if not ok then
+		print("your project should be a git repository")
+	else
+		if vim.tbl_count(match_rules) == 0 then
+			print("this project can not find any command in languages-tools")
+		else
+			_G['languages_tools_tasks_pool'] = {}
+			-- if match some rules, we should push into task pool depend on itself language
+			version.setup("/home/williamgoods/Github/languages-tools.nvim/lua", tasks_path, match_rules)
+			print("vim.g.languages_tools_tasks_pool: " )
+			tprint(_G['languages_tools_tasks_pool'])
+			languages_tools.ShowCommands(_G['languages_tools_tasks_pool'], gitdir)
 		end
 	end
 end
 
-scan_tasks_driectory(vim.g.languages_tools_tasks_path)
-scan_tasks_driectory(vim.g.languages_tools_system_task_path)
-tasks_path[#tasks_path+1] = gitdir .. "/.language/tasks.json"
-
-print("I want to know task_path:")
-tprint(tasks_path)
-
--- if vim.g.languages_tools_tasks_path then
-	-- for language, _ in pairs(match_rules) do
-		-- local tasks_json_path = vim.g.languages_tools_tasks_path .. "/" .. language .. "/tasks.json"
---
-		-- if lib.exists(tasks_json_path) then
-			-- tasks_path[#tasks_path+1] = tasks_json_path
-		-- end
-	-- end
--- end
-
-function M.RunProject()
-	print("run our project")
-	if #match_rules == 0 then
-		print("this project can not find any command in languages-tools")
-	else
-		-- if match some rules, we should push into task pool depend on itself language
-		version.setup("", tasks_path, match_rules)
-	end
-
-	-- if match_language == "" then
-		-- print("this project can not find any command in languages-tools")
-	-- else
-		-- print("match_language: " .. match_language)
-		-- languages_tools.ShowCommands(match_language, gitdir)
-	-- end
-end
-
-M.RunProject()
+-- M.RunProject()
 
 return M
 

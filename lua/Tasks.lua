@@ -1,5 +1,5 @@
-local lib = require("lua.languages-tools.lib")
-local check = require("lua.Check").setup()
+local lib = require("languages-tools.lib")
+local check = require("Check").setup()
 
 local M = {}
 
@@ -22,6 +22,7 @@ function M.setup(user_format_path, tasks_pathes, match_rules)
 	local TasksPathMap = {}
 
 	for _, tasks_path in ipairs(tasks_pathes) do
+		print("tasks_path: " .. tasks_path)
 		local Tasks = lib.DecodeJsonFile(tasks_path)
 
 		TasksPathMap[tasks_path] = Tasks
@@ -42,6 +43,8 @@ function M.setup(user_format_path, tasks_pathes, match_rules)
 					local taskhandler = M.DefaultTaskHandler
 
 					for _, task in ipairs(Tasks.tasks) do
+						tprint(task)
+						tprint(timepoints.tasks)
 						local result = taskhandler(timepoints.tasks, task, timepointoperation, match_rules)
 
 						if result['filter_ok'] then
@@ -69,7 +72,7 @@ function M.DefaultTaskHandler(timepoints, task, timepointoperation, match_rules)
 
 	result = M.After(timepoints['after'], result, task, timepointoperation)
 
-	return true, M.Return(timepoints['return'], result, task, timepointoperation)
+	return M.Return(timepoints['return'], result, task, timepointoperation)
 end
 
 function M.Before(beforefunctions, result, task, timepointoperation, match_rules)
@@ -100,9 +103,17 @@ function M.Return(returnfuntions, result, task, timepointoperation)
 	return result
 end
 
-function M.PutIntoTaskPool(taskanme, taskexecution)
-	print("taskname: " .. taskanme .. ", taskexecution: ")
-	tprint(taskexecution)
+function M.PutIntoTaskPool(taskname, taskexecution)
+	if not _G['languages_tools_tasks_pool'] then
+		_G['languages_tools_tasks_pool'] = {}
+	end
+
+	local task = {}
+	task[#task+1] = taskname
+	task[#task+1] = taskexecution
+	_G['languages_tools_tasks_pool'][#_G['languages_tools_tasks_pool']+1] = task
+
+	print("taskname: " .. taskname .. ", taskexecution: " .. taskexecution)
 end
 
 -- M.setup("/home/williamgoods", "/home/williamgoods")

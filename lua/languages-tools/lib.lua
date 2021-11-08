@@ -1,5 +1,5 @@
 local lib = {}
-local json = require("lua.json")
+local json = require("json")
 
 function lib.FileOpration(filename, operation, filefunc)
 	local file = io.open(filename, operation)

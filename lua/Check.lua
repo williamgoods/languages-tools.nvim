@@ -170,17 +170,14 @@ function M.ParseDirectory(ObjectsFormat, Objects)
 		return extendparsefirst
 	end
 
-	-- tprint(Objects)
-	for name, objformat in pairs(format) do
+	tprint(Objects)
 		for _, object in pairs(Objects) do
-			print(tostring(object))
-			local ok = M.Check(objformat, object[name])
+			local ok = M.Check(format, object)
 
 			if not ok then
 				print("ParseDirectory false")
 				return false
 			end
-		end
 	end
 
 	return true
@@ -241,5 +238,8 @@ function M.ParseList(ObjectsFormat, Objects)
 
 	return true
 end
+
+M.setup()
+
 
 return M

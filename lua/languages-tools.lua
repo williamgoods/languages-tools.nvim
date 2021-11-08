@@ -1,7 +1,7 @@
 local vim = vim
 
-local log = require("languages-tools/log")
-local lib = require("languages-tools/lib")
+local log = require("languages-tools.log")
+local lib = require("languages-tools.lib")
 local buidin_cmd = {
 	rust = {
 		{"cargo install","cargo install --path ."},
@@ -61,11 +61,9 @@ function M.add(command)
 	end
 end
 
-function M.choice_command(language, choice)
-	local languagehandler = M.cmd[language]
-	log.record(languagehandler[choice])
-
-	M.run_command(languagehandler[choice])
+function M.choice_command(choice)
+	local task = _G['languages_tools_tasks_pool'][choice]
+	M.run_command(task[#task])
 end
 
 -- return command status after running
@@ -83,7 +81,7 @@ function M.run_command(command)
 	vim.api.nvim_command("cd " .. current_path)
 end
 
-function M.UiRender(language)
+function M.UiRender(match_commands)
 	local pickers = require "telescope.pickers"
 	local finders = require "telescope.finders"
 	local conf = require("telescope.config").values
@@ -91,11 +89,11 @@ function M.UiRender(language)
 	local action_state = require("telescope.actions.state")
 
 	M.languages_tools = {}
-	local current_language = M.cmd[language]
-	if current_language == nil then
-		print("current language commands is empty")
+
+	if match_commands == nil then
+		print("current project commands is empty")
 	else
-		print("current language commands is not empty")
+		print("current project commands is not empty")
 	end
 
 	-- this section copy from rust-tools.nvim
@@ -105,29 +103,28 @@ function M.UiRender(language)
 					if entry == nil then
 						local current_line = action_state.get_current_line()
 						log.record("current line: ".. current_line)
-						M.run_command(current_line)
 
 						actions.close(bufnr)
+						M.run_command(current_line)
 					else
 						local choice = entry.index
 
 						log.record("my choice is " .. choice)
 
-						M.choice_command(language, choice)
-
 						actions.close(bufnr)
+						M.choice_command(choice)
 					end
 			end
 
-			local function show_history()
-				actions.close(bufnr)
-				log.record("the operation will show history")
-			end
+			-- local function show_history()
+				-- actions.close(bufnr)
+				-- log.record("the operation will show history")
+			-- end
 
 			map('n', '<CR>', on_select)
 			map('i', '<CR>', on_select)
-			map('n', '<C-h>', show_history)
-			map('i', '<C-h>', show_history)
+			-- map('n', '<C-h>', show_history)
+			-- map('i', '<C-h>', show_history)
 
 			-- Additional mappings don't push the item to the tagstack.
 			return true
@@ -136,9 +133,16 @@ function M.UiRender(language)
 	M.languages_tools.ui = nil
 	M.languages_tools.ui = function(opts)
 		pickers.new(opts, {
-			prompt_title = language,
+			prompt_title = "languages-tools",
 			finder = finders.new_table {
-				results = current_language
+				results = match_commands,
+				entry_maker = function(entry)
+					return {
+						value = entry,
+						display = entry[1],
+						ordinal = entry[1],
+					}
+				end
 			},
 			sorter = conf.generic_sorter(opts),
 			attach_mappings = attach_mappings,
@@ -146,10 +150,12 @@ function M.UiRender(language)
 	end
 end
 
-function M.ShowCommands(language, gitdir)
+function M.ShowCommands(match_commands, gitdir)
 		M.gitdir = gitdir
+		print("ShowCommands match_commands: ")
+		tprint(match_commands)
 		-- M.setup()
-		M.UiRender(language)
+		M.UiRender(match_commands)
 		M.languages_tools.ui()
 end
 
