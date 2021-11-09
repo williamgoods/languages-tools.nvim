@@ -5,7 +5,7 @@
 	"tasks": {
 		"type":		"list",
 		"elemformat":{
-			"name": {
+			"name":  {
 				"type": "string"
 			},
 			"command":{
@@ -15,14 +15,8 @@
 			"belongrules": {
 				"type": "directory",
 				"elemformat": {
-					"type": "map",
-					"elemformat": {
-						"key": "string", 
-						"value": {
-							"type": "list",
-							"elemformat": "string"
-						}
-					}
+					"type": "list",
+					"elemformat": "string"
 				} 
 			},
 			"class": {
@@ -32,21 +26,13 @@
 				"type": "bool"
 			},
 			"options": {
-				"type": "limitedlist", 
+				"type": "limiteddirectory", 
 				"elemformat": {
-					"1": {
-						"type": "limitedmap",
-						"elemformat": {
-							"key": "cwd",
-							"value": "string"
-						}
+					"cwd": {
+						"type": "string"
 					},
-					"2": {
-						"type": "limitedmap",
-						"elemformat": {
-							"key": "shell",
-							"value": "string"
-						}
+					"shell": {
+						"type": "string"
 					}
 				}
 			}

@@ -8,6 +8,8 @@ local M = {}
 
 local ok, gitdir = lib.CheckGitDirectory()
 
+vim.g.languages_tools_system_task_path = lib.script_path() .. "languages_format"
+
 -- project rules presentation
 -- use another file to present it
 local project_rules = {
@@ -71,10 +73,10 @@ if ok then
 		if tasks_directory then
 			for language, _ in pairs(match_rules) do
 				local tasks_json_path = tasks_directory .. "/" .. language .. "/tasks.json"
-				print("add tasks_json_path: " .. tasks_json_path)
+				-- print("add tasks_json_path: " .. tasks_json_path)
 
 				if lib.exists(tasks_json_path) then
-					tasks_path[#tasks_path+1] = tasks_json_path
+					tasks_path[#tasks_path + 1] = tasks_json_path
 				end
 			end
 		end
@@ -107,7 +109,7 @@ function M.RunProject()
 		else
 			_G['languages_tools_tasks_pool'] = {}
 			-- if match some rules, we should push into task pool depend on itself language
-			version.setup("/home/williamgoods/Github/languages-tools.nvim/lua", tasks_path, match_rules)
+			version.setup("", tasks_path, match_rules)
 			-- print("vim.g.languages_tools_tasks_pool: " )
 			-- tprint(_G['languages_tools_tasks_pool'])
 			languages_tools.ShowCommands(_G['languages_tools_tasks_pool'], gitdir)

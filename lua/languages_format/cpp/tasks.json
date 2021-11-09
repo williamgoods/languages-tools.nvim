@@ -1,0 +1,16 @@
+{
+	"version" : "0.1", 
+	"tasks": [
+			{
+				"name": "CppRun",
+				"command":	["g++ main.cpp -o main", "./main"],
+				"belongrules": {"cpp": ["rule1"]},
+				"class": "build",
+				"default": "true",
+				"options": {
+					"cwd": "cwd",
+					"shell": "shell"
+				}
+			}
+		]
+}

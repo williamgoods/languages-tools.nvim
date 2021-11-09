@@ -7,7 +7,7 @@ function M.setup(user_timpoint_path)
 	local timepointsfile = user_timpoint_path .. "/Timepoints.json"
 
 	if not lib.exists(timepointsfile) then
-		timepointsfile = "lua/Timepoints.json"
+		timepointsfile = lib.script_path() .. "Timepoints.json"
 	end
 
 	local raw_timepoints = lib.DecodeJsonFile(timepointsfile)

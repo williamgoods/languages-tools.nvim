@@ -1,0 +1,27 @@
+{
+	"version" : "0.1", 
+	"tasks": [
+			{
+				"name": "GoMainRun",
+				"command":	["go run main.go"],
+				"belongrules": {"go": ["rule2"]},
+				"class": "build",
+				"default": "true",
+				"options": {
+					"cwd": "cwd",
+					"shell": "shell"
+				}
+			},
+			{
+				"name": "GoBuild",
+				"command":	["go build"],
+				"belongrules": {"go": ["rule2"]},
+				"class": "build",
+				"default": "true",
+				"options": {
+					"cwd": "cwd",
+					"shell": "shell"
+				}
+			}
+	]
+}

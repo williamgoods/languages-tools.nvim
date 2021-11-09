@@ -1,0 +1,27 @@
+{
+	"version" : "0.1", 
+	"tasks": [
+			{
+				"name": "CargoRun",
+				"command":	["cargo run"],
+				"belongrules": {"rust": ["rule1"]},
+				"class": "build",
+				"default": "true",
+				"options": {
+					"cwd": "cwd",
+					"shell": "shell"
+				}
+			},
+			{
+				"name": "CargoBuild",
+				"command":	["cargo build"],
+				"belongrules": {"rust": ["rule1"]},
+				"class": "build",
+				"default": "true",
+				"options": {
+					"cwd": "cwd",
+					"shell": "shell"
+				}
+			}
+		]
+}

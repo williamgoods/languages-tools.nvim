@@ -8,7 +8,7 @@ function M.setup(user_format_path, tasks_pathes, match_rules)
 	local taskformatfile = user_format_path .. "/TasksFormat.json"
 
 	if not lib.exists(taskformatfile) then
-		taskformatfile = "lua/TasksFormat.json"
+		taskformatfile = lib.script_path() .. "TasksFormat.json"
 	end
 
 	-- local tasksfile = user_tasks_path .. "/tasks.json"
