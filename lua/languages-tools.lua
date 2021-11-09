@@ -2,6 +2,9 @@ local vim = vim
 
 local log = require("languages-tools.log")
 local lib = require("languages-tools.lib")
+
+local latest_buf_id = nil
+
 local buidin_cmd = {
 	rust = {
 		{"cargo install","cargo install --path ."},
@@ -73,11 +76,39 @@ function M.run_command(command)
 
 	vim.api.nvim_command("cd " .. M.gitdir)
 
-	vim.api.nvim_command("botright split")
-	vim.api.nvim_command("execute \"terminal " .. command .. "\"")
-	vim.api.nvim_command("normal! G")
-	vim.api.nvim_command("startinsert")
+	-- vim.api.nvim_command("botright split")
+	-- vim.api.nvim_command("execute \"terminal " .. command .. "\"")
+  -- vim.api.nvim_command("normal! G")
 	-- log.record("run_command path: " .. vim.fn.getcwd())
+
+	-- check if a buffer with the latest id is already open, if it is then
+	-- delete it and continue
+	lib.delete_buf(latest_buf_id)
+
+	-- create the new buffer
+	latest_buf_id = vim.api.nvim_create_buf(false, true)
+
+	-- split the window to create a new buffer and set it to our window
+	lib.split(false, latest_buf_id)
+
+	-- make the new buffer smaller
+	lib.resize(false, "-5")
+
+	-- close the buffer when escape is pressed :)
+	vim.api.nvim_buf_set_keymap(latest_buf_id, "n", "<Esc>", ":q<CR>", { noremap = true })
+
+	-- run the command
+	vim.fn.termopen(command)
+
+	vim.api.nvim_command("normal! G")
+
+	-- when the buffer is closed, set the latest buf id to nil else there are
+	-- some edge cases with the id being sit but a buffer not being open
+	local function onDetach(_, _)
+		latest_buf_id = nil
+	end
+
+	vim.api.nvim_buf_attach(latest_buf_id, false, { on_detach = onDetach })
 
 	vim.api.nvim_command("cd " .. current_path)
 end
@@ -91,11 +122,11 @@ function M.UiRender(match_commands)
 
 	M.languages_tools = {}
 
-	if match_commands == nil then
-		print("current project commands is empty")
-	else
-		print("current project commands is not empty")
-	end
+	-- if match_commands == nil then
+		-- print("current project commands is empty")
+	-- else
+		-- print("current project commands is not empty")
+	-- end
 
 	-- this section copy from rust-tools.nvim
 	local function attach_mappings(bufnr, map)
@@ -153,8 +184,6 @@ end
 
 function M.ShowCommands(match_commands, gitdir)
 		M.gitdir = gitdir
-		print("ShowCommands match_commands: ")
-		tprint(match_commands)
 		-- M.setup()
 		M.UiRender(match_commands)
 		M.languages_tools.ui()

@@ -108,8 +108,8 @@ function M.RunProject()
 			_G['languages_tools_tasks_pool'] = {}
 			-- if match some rules, we should push into task pool depend on itself language
 			version.setup("/home/williamgoods/Github/languages-tools.nvim/lua", tasks_path, match_rules)
-			print("vim.g.languages_tools_tasks_pool: " )
-			tprint(_G['languages_tools_tasks_pool'])
+			-- print("vim.g.languages_tools_tasks_pool: " )
+			-- tprint(_G['languages_tools_tasks_pool'])
 			languages_tools.ShowCommands(_G['languages_tools_tasks_pool'], gitdir)
 		end
 	end

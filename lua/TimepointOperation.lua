@@ -54,7 +54,7 @@ function M.tasks_command(result, task)
 
 	for _, command in ipairs(commands) do
 		-- table.insert(result['command'], #result['command'], command)
-		final_commmand = final_commmand .. "&&" .. command
+		final_commmand = final_commmand .. ";" .. command
 	end
 
 	result['command'] = final_commmand

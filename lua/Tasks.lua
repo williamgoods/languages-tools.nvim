@@ -22,7 +22,7 @@ function M.setup(user_format_path, tasks_pathes, match_rules)
 	local TasksPathMap = {}
 
 	for _, tasks_path in ipairs(tasks_pathes) do
-		print("tasks_path: " .. tasks_path)
+		-- print("tasks_path: " .. tasks_path)
 		local Tasks = lib.DecodeJsonFile(tasks_path)
 
 		TasksPathMap[tasks_path] = Tasks
@@ -33,7 +33,7 @@ function M.setup(user_format_path, tasks_pathes, match_rules)
 			local ok = true
 
 			for fieldname, field in pairs(TasksFormat) do
-				print(fieldname)
+				-- print(fieldname)
 				ok = ok and check.Check(field, Tasks[fieldname])
 			end
 
@@ -43,8 +43,8 @@ function M.setup(user_format_path, tasks_pathes, match_rules)
 					local taskhandler = M.DefaultTaskHandler
 
 					for _, task in ipairs(Tasks.tasks) do
-						tprint(task)
-						tprint(timepoints.tasks)
+						-- tprint(task)
+						-- tprint(timepoints.tasks)
 						local result = taskhandler(timepoints.tasks, task, timepointoperation, match_rules)
 
 						if result['filter_ok'] then
@@ -113,7 +113,7 @@ function M.PutIntoTaskPool(taskname, taskexecution)
 	task[#task+1] = taskexecution
 	_G['languages_tools_tasks_pool'][#_G['languages_tools_tasks_pool']+1] = task
 
-	print("taskname: " .. taskname .. ", taskexecution: " .. taskexecution)
+	-- print("taskname: " .. taskname .. ", taskexecution: " .. taskexecution)
 end
 
 return M

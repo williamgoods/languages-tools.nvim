@@ -1,5 +1,9 @@
 local M = {}
 
+if not vim.g.languages_tools_check_log then
+	vim.g.languages_tools_check_log  = false
+end
+
 -- we should add log model to our parse process
 
 function M.setup()
@@ -26,27 +30,41 @@ function M.Check(ObjectsFormat, Objects)
 end
 
 function M.ParseString(_, object)
-	print("parse current string: " .. tostring(object))
+	if vim.g.languages_tools_check_log then
+		print("parse current string: " .. tostring(object))
+	end
 	if type(object) == "string" then
 		return true
 	else
-		print("ParseString false")
+		if vim.g.languages_tools_check_log then
+			print("ParseString false")
+		end
+
 		return false
 	end
 end
 
 function M.ParseBool(_, object)
-	print("parse current bool: " .. tostring(object))
+	if vim.g.languages_tools_check_log then
+		print("parse current bool: " .. tostring(object))
+	end
+
 	if object == "true" or object == "false" then
 		return true
 	else
-		print("ParseBool false")
+		if vim.g.languages_tools_check_log then
+			print("ParseBool false")
+		end
+
 		return false
 	end
 end
 
 function M.ParseMap(ObjectsFormat, Objects)
-	print("enter ParseMap")
+	if vim.g.languages_tools_check_log then
+		print("enter ParseMap")
+	end
+
 	local format = ObjectsFormat['elemformat']
 	local keytype = format['key']
 	local valuetype = format['value']
@@ -64,7 +82,10 @@ function M.ParseMap(ObjectsFormat, Objects)
 	ok = M.Check(input_format, key)
 
 	if not ok then
-		print("ParseMap false")
+		if vim.g.languages_tools_check_log then
+			print("ParseMap false")
+		end
+
 		return false
 	end
 
@@ -77,7 +98,10 @@ function M.ParseMap(ObjectsFormat, Objects)
 	ok = M.Check(input_format, value)
 
 	if not ok then
-		print("ParseMap false")
+		if vim.g.languages_tools_check_log then
+			print("ParseMap false")
+		end
+
 		return false
 	end
 
@@ -85,7 +109,10 @@ function M.ParseMap(ObjectsFormat, Objects)
 end
 
 function M.ParseLimitedMap(ObjectsFormat, Objects)
-	print("enter ParseLimitedMap")
+	if vim.g.languages_tools_check_log then
+		print("enter ParseLimitedMap")
+	end
+
 	local format = ObjectsFormat['elemformat']
 	local keydefalut = format['key']
 	local valuetype = format['value']
@@ -94,7 +121,10 @@ function M.ParseLimitedMap(ObjectsFormat, Objects)
 	local value = Objects['value']
 
 	if key ~= keydefalut then
-		print("ParseLimitedMap false")
+		if vim.g.languages_tools_check_log then
+			print("ParseLimitedMap false")
+		end
+
 		return false
 	end
 
@@ -107,7 +137,10 @@ function M.ParseLimitedMap(ObjectsFormat, Objects)
 	local ok = M.Check(input_format, value)
 
 	if not ok then
-		print("ParseLimitedMap false")
+		if vim.g.languages_tools_check_log then
+			print("ParseLimitedMap false")
+		end
+
 		return false
 	end
 
@@ -149,7 +182,10 @@ function M.ParseExtendElemFormat(objectformat, name, object)
 
 	-- tprint(objectformat)
 	if objectformat['type'] == 'map' or objectformat['type'] == 'limitedmap' then
-		print("to Parse***Map function args: ".."{ key = " .. name .. ", value = " .. tostring(object) .. "}")
+		if vim.g.languages_tools_check_log then
+			print("to Parse***Map function args: ".."{ key = " .. name .. ", value = " .. tostring(object) .. "}")
+		end
+
 		ok = M.Check(objectformat, {key = name, value = object})
 	else
 		ok = M.Check(objectformat, object)
@@ -159,7 +195,10 @@ function M.ParseExtendElemFormat(objectformat, name, object)
 end
 
 function M.ParseDirectory(ObjectsFormat, Objects)
-	print("enter ParseDirectory")
+	if vim.g.languages_tools_check_log then
+		print("enter ParseDirectory")
+	end
+
 	local format = ObjectsFormat["elemformat"]
 
 	local directreturn, extendparsefirst = M.ParseExtendFirst(format, Objects)
@@ -167,12 +206,19 @@ function M.ParseDirectory(ObjectsFormat, Objects)
 		return extendparsefirst
 	end
 
-	tprint(Objects)
+
+	if vim.g.languages_tools_check_log then
+		tprint(Objects)
+	end
+
 	for _, object in pairs(Objects) do
 		local ok = M.Check(format, object)
 
 		if not ok then
-			print("parsedirectory false")
+			if vim.g.languages_tools_check_log then
+				print("parsedirectory false")
+			end
+
 			return false
 		end
 	end
@@ -181,7 +227,9 @@ function M.ParseDirectory(ObjectsFormat, Objects)
 end
 
 function M.ParseLimitedDirectory(ObjectsFormat, Objects)
-	print("enter ParseLimitedDirectory")
+	if vim.g.languages_tools_check_log then
+		print("enter ParseLimitedDirectory")
+	end
 
 	local format = ObjectsFormat["elemformat"]
 
@@ -194,7 +242,10 @@ function M.ParseLimitedDirectory(ObjectsFormat, Objects)
 		local ok = M.Check(objformat, Objects[objformatname])
 
 		if not ok then
-			print("parsedirectory false")
+			if vim.g.languages_tools_check_log then
+				print("parsedirectory false")
+			end
+
 			return false
 		end
 	end
@@ -256,7 +307,10 @@ end
 -- end
 
 function M.ParseList(ObjectsFormat, Objects)
-	print("enter ParseList")
+	if vim.g.languages_tools_check_log then
+		print("enter ParseList")
+	end
+
 	local format = ObjectsFormat['elemformat']
 
 	local directreturn, extendparsefirst = M.ParseExtendFirst(format, Objects)
@@ -271,7 +325,10 @@ function M.ParseList(ObjectsFormat, Objects)
 			local ok = M.ParseExtendElemFormat(objformat, filedname, field)
 
 			if not ok then
-				print("ParseList false")
+				if vim.g.languages_tools_check_log then
+					print("ParseList false")
+				end
+
 				return false
 			end
 		end

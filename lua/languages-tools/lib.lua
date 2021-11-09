@@ -1,6 +1,27 @@
 local lib = {}
 local json = require("json")
 
+function lib.delete_buf(bufnr)
+	if bufnr ~= nil then
+		vim.api.nvim_buf_delete(bufnr, { force = true })
+	end
+end
+
+function lib.split(vertical, bufnr)
+	local cmd = vertical and "vsplit" or "split"
+
+	vim.cmd(cmd)
+	local win = vim.api.nvim_get_current_win()
+	vim.api.nvim_win_set_buf(win, bufnr)
+end
+
+function lib.resize(vertical, amount)
+	local cmd = vertical and "vertical resize " or "resize"
+	cmd = cmd .. amount
+
+	vim.cmd(cmd)
+end
+
 function lib.FileOpration(filename, operation, filefunc)
 	local file = io.open(filename, operation)
 	filefunc(file)
